@@ -20,7 +20,7 @@ public class WiFiUtil{
     WifiLock mWifiLock;
     public WiFiUtil(Context context){
         //取得WifiManager对象
-        mWifiManager=(WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager=(WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         //取得WifiInfo对象
         mWifiInfo=mWifiManager.getConnectionInfo();
     }

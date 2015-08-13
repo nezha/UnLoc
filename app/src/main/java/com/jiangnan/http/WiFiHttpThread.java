@@ -43,7 +43,7 @@ public class WiFiHttpThread extends Thread{
             //get write sream
             OutputStream  os = socket.getOutputStream();
             PrintWriter pw = new PrintWriter(os);
-            //get reag stream
+            //get read stream
             InputStream is = socket.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             pw.write(WiFiInfo);
@@ -56,7 +56,13 @@ public class WiFiHttpThread extends Thread{
             while ((reply=br.readLine())!=null){
                 RS = RS + reply;
             }
-            System.out.print(RS);
+            br.close();
+            is.close();
+            pw.close();
+            os.close();
+            //then tell someone to update the UI
+
+
             //Toast.makeText(,RS,Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
