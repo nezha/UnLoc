@@ -3,8 +3,8 @@ package com.jiangnan.http;
 
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jiangnan.LocInstance.Position;
-import com.jiangnan.unloc.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +22,8 @@ public class WiFiHttpThread extends Thread{
     private String WiFiInfo;
     private static final int port = 4000;
     private static final String IP_ADDR = "127.0.0.1";
+
+    private UpdateLoc updateLoc;
 
     /**
      *
@@ -60,8 +62,10 @@ public class WiFiHttpThread extends Thread{
             is.close();
             pw.close();
             os.close();
+            socket.close();
             //then tell someone to update the UI
 
+            updateLoc.updateLoc(RS);
 
             //Toast.makeText(,RS,Toast.LENGTH_LONG).show();
         } catch (IOException e) {
@@ -69,7 +73,15 @@ public class WiFiHttpThread extends Thread{
         }
     }
 
+    //用于回调的接口
+    public interface UpdateLoc{
+        void updateLoc(String content);
+    }
 
+    //注册接口
+    public void setUpdateLocListener(UpdateLoc updateLoc){
+        this.updateLoc = updateLoc;
+    }
     @Override
     public void run() {
         PostMsg();

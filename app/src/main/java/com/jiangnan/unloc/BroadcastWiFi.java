@@ -11,49 +11,60 @@ import com.google.gson.Gson;
 import com.jiangnan.Util.WiFiUtil;
 
 
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nezha on 2015/8/13.
  */
 public class BroadcastWiFi extends BroadcastReceiver {
 
-    // É¨Ãè½á¹ûÁĞ±í
+    // æ‰«æç»“æœåˆ—è¡¨
     private List<ScanResult> list;
     private ScanResult mScanResult;
     private WiFiUtil mWifiAdmin;
     private HashMap<String,Integer> wifiMap = new HashMap<>();
 
+    private WiFiInterface wifiInterface;
+
+
+    public BroadcastWiFi(WiFiUtil mWifiAdmin){
+        this.mWifiAdmin = mWifiAdmin;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mWifiAdmin = new WiFiUtil(context);
-        mWifiAdmin.openWifi();
+        //get wifi info,and send it to server to get returns to update location
         String wifiLog = getAllNetWorkList();
-        Toast.makeText(context,wifiLog,Toast.LENGTH_LONG).show();
+        wifiInterface.setWiFiInfo(wifiLog);
     }
 
     public String getAllNetWorkList() {
-        // Ã¿´Îµã»÷É¨ÃèÖ®Ç°Çå¿ÕÉÏÒ»´ÎµÄÉ¨Ãè½á¹û
+        // æ¯æ¬¡ç‚¹å‡»æ‰«æä¹‹å‰æ¸…ç©ºä¸Šä¸€æ¬¡çš„æ‰«æç»“æœ
         if (wifiMap != null) {
             wifiMap = new HashMap<>();
         }
-        //¿ªÊ¼É¨ÃèÍøÂç
+        //å¼€å§‹æ‰«æç½‘ç»œ
         mWifiAdmin.startScan();
         list = mWifiAdmin.getWifiList();
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
-                //µÃµ½É¨Ãè½á¹û
+                //å¾—åˆ°æ‰«æç»“æœ
                 mScanResult = list.get(i);
                 wifiMap.put(mScanResult.BSSID,mScanResult.level);
             }
         }
         Gson gson = new Gson();
         return gson.toJson(wifiMap);
-//        return wifiMap.toString();
+    }
+
+
+    public interface WiFiInterface{
+        void setWiFiInfo(String content);
+    }
+
+    public void setWiFiInterfaceListener(WiFiInterface wifiInterface){
+        this.wifiInterface = wifiInterface;
     }
 }
