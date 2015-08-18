@@ -39,18 +39,19 @@ public class MainActivity extends Activity implements BroadcastWiFi.WiFiInterfac
     }
 
 
-    //回调函数，获取到wifi信号数据
+    //鍥炶皟鍑芥暟锛岃幏鍙栧埌wifi淇″彿鏁版嵁
     @Override
     public void setWiFiInfo(String content) {
         if (content != null){
             WiFiInfo.setText(content);
-            //一旦获得就采取socket通信
+            //涓�鏃﹁幏寰楀氨閲囧彇socket閫氫俊
             wifiHttpThread = new WiFiHttpThread(content);
             wifiHttpThread.start();
         }
     }
 
-    //回调函数，获取到位置信息
+    //鍥炶皟鍑芥暟锛岃幏鍙栧埌浣嶇疆淇℃伅
+    // the string of content is like:{'LocX':123.0,'LocY':123.0,'floor':2}
     @Override
     public void updateLoc(String content) {
         if (content != null){

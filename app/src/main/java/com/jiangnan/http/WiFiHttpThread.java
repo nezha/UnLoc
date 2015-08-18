@@ -1,9 +1,7 @@
 package com.jiangnan.http;
 
 
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jiangnan.LocInstance.Position;
 
 import java.io.BufferedReader;
@@ -27,7 +25,8 @@ public class WiFiHttpThread extends Thread{
 
     /**
      *
-     * @param WiFiInfo the msg which will post to server ,like this : {'74:25:8a:47:36:90': -44.3125, '74:25:8a:47:38:60': -93.5}
+     * @param WiFiInfo the msg which will post to server ,
+     * like this : {'74:25:8a:47:36:90': -44.3125, '74:25:8a:47:38:60': -93.5}
      */
     public WiFiHttpThread(String WiFiInfo){
         this.WiFiInfo = WiFiInfo;
@@ -64,7 +63,7 @@ public class WiFiHttpThread extends Thread{
             os.close();
             socket.close();
             //then tell someone to update the UI
-
+            //the string of RS is like:{'LocX':123.0,'LocY':123.0,'floor':2}
             updateLoc.updateLoc(RS);
 
             //Toast.makeText(,RS,Toast.LENGTH_LONG).show();
