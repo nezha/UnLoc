@@ -19,7 +19,7 @@ public class WiFiHttpThread extends Thread{
 
     private String WiFiInfo;
     private static final int port = 4000;
-    private static final String IP_ADDR = "127.0.0.1";
+    private static final String IP_ADDR = "172.20.50.2";
 
     private UpdateLoc updateLoc;
 
@@ -38,7 +38,7 @@ public class WiFiHttpThread extends Thread{
      *
      */
     private void PostMsg(){
-        Position position = Position.getPosition(); //get instance object
+        //Position position = Position.getPosition(); //get instance object
         try {
             Socket socket = new Socket(IP_ADDR,port);
             //get write sream
@@ -68,6 +68,7 @@ public class WiFiHttpThread extends Thread{
 
             //Toast.makeText(,RS,Toast.LENGTH_LONG).show();
         } catch (IOException e) {
+            System.out.print("can't connect");
             e.printStackTrace();
         }
     }

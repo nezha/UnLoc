@@ -36,6 +36,7 @@ public class BroadcastWiFi extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //get wifi info,and send it to server to get returns to update location
+        Toast.makeText(context,"Receiver start get wifi information",Toast.LENGTH_LONG).show();
         String wifiLog = getAllNetWorkList();
         wifiInterface.setWiFiInfo(wifiLog);
     }

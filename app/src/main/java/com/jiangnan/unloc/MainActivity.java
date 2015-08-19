@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jiangnan.LocInstance.Position;
 import com.jiangnan.Util.WiFiUtil;
@@ -15,7 +16,7 @@ public class MainActivity extends Activity implements BroadcastWiFi.WiFiInterfac
     /** Called when the activity is first created. */
     private TextView UserLoc,WiFiInfo;
     private WiFiUtil mWifiAdmin;
-    private WiFiHttpThread wifiHttpThread;
+    private WiFiHttpThread wifiHttpThread = new WiFiHttpThread(null);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends Activity implements BroadcastWiFi.WiFiInterfac
         BroadcastWiFi wifiReceive = new BroadcastWiFi(mWifiAdmin);
         registerReceiver(wifiReceive, wifiFilter);
         wifiReceive.setWiFiInterfaceListener(this);
+        //因为要等到wifibroadcast接收到数据才能实例化wifiHttpThread
         wifiHttpThread.setUpdateLocListener(this);
     }
 
@@ -43,10 +45,12 @@ public class MainActivity extends Activity implements BroadcastWiFi.WiFiInterfac
     @Override
     public void setWiFiInfo(String content) {
         if (content != null){
+            Toast.makeText(this,"the wifi info is:"+content,Toast.LENGTH_LONG).show();
             WiFiInfo.setText(content);
             //一旦获得就采取socket通信
             wifiHttpThread = new WiFiHttpThread(content);
             wifiHttpThread.start();
+            Toast.makeText(this, "start socket", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -55,7 +59,7 @@ public class MainActivity extends Activity implements BroadcastWiFi.WiFiInterfac
     @Override
     public void updateLoc(String content) {
         if (content != null){
-            UserLoc.setText(content);
+            UserLoc.setText(content+System.currentTimeMillis());
         }
     }
 }
