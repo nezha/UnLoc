@@ -2,6 +2,10 @@ package com.jiangnan.http;
 
 
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+
 import com.jiangnan.LocInstance.Position;
 
 import java.io.BufferedReader;
@@ -19,17 +23,19 @@ public class WiFiHttpThread extends Thread{
 
     private String WiFiInfo;
     private static final int port = 4000;
-    private static final String IP_ADDR = "172.20.50.2";
+    private static final String IP_ADDR = "172.18.151.1";
 
-    private UpdateLoc updateLoc;
+    public Handler handler;
+    //private UpdateLoc updateLoc;
 
     /**
      *
      * @param WiFiInfo the msg which will post to server ,
      * like this : {'74:25:8a:47:36:90': -44.3125, '74:25:8a:47:38:60': -93.5}
      */
-    public WiFiHttpThread(String WiFiInfo){
+    public WiFiHttpThread(String WiFiInfo,Handler handler){
         this.WiFiInfo = WiFiInfo;
+        this.handler = handler;
     }
 
 
@@ -52,11 +58,18 @@ public class WiFiHttpThread extends Thread{
             socket.shutdownOutput();
 
             //get msg from server
-            String RS = null;
-            String reply = null;
+            String RS = "";
+            String reply;
             while ((reply=br.readLine())!=null){
                 RS = RS + reply;
             }
+            Message msg = handler.obtainMessage();
+            msg.what = 0x4000;
+            Bundle bundle = new Bundle();
+            bundle.putString("Location",RS);
+            msg.setData(bundle);
+            handler.sendMessage(msg);
+
             br.close();
             is.close();
             pw.close();
@@ -64,7 +77,7 @@ public class WiFiHttpThread extends Thread{
             socket.close();
             //then tell someone to update the UI
             //the string of RS is like:{'LocX':123.0,'LocY':123.0,'floor':2}
-            updateLoc.updateLoc(RS);
+            //updateLoc.updateLoc(RS);
 
             //Toast.makeText(,RS,Toast.LENGTH_LONG).show();
         } catch (IOException e) {
@@ -72,18 +85,21 @@ public class WiFiHttpThread extends Thread{
             e.printStackTrace();
         }
     }
-
+    /*
     //用于回调的接口
     public interface UpdateLoc{
         void updateLoc(String content);
     }
 
+
     //注册接口
     public void setUpdateLocListener(UpdateLoc updateLoc){
         this.updateLoc = updateLoc;
     }
+    */
     @Override
     public void run() {
         PostMsg();
     }
+
 }
